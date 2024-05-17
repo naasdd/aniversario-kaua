@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+}
+:root{
+    --azul: #93a5cf;
+    --branco: #e4efe9;
+}
+body{
+    background-image: url(./img/bg-body2.png);
+    background-repeat:round;
+    background-size: cover;
+    height: 98vh;
+    overflow: hidden;
+    font-family: 'Poetsen One', Arial, Helvetica, sans-serif;
+}
+
+h1{
+    font-weight: 100;
+    color: var(--branco);
+    text-shadow: 0px 0px 3px  black;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 60px;
+}
+
+main{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#ctx{
+    border: solid 5px var(--azul);
+    border-radius: 10px;
+    background-image: url('./img/bg-canvas.png');
+    background-repeat: round;
+    filter: brightness(.7);
+}
