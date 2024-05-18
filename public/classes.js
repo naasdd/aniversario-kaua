@@ -8,7 +8,15 @@ class Obj{
     }
 }
 
-class Snake extends Obj{
+class Snake{
+    constructor(x, y, w, h, color, id){
+        this.x = x
+        this.y = y
+        this.w = w
+        this.h = h
+        this.color = color
+        this.id = id
+}
     drawSnake(){
         ctx.fillStyle = this.color
         ctx.fillRect(this.x, this.y, this.w, this.h)
@@ -83,7 +91,7 @@ class Apple extends Obj{
             randomNumber = Math.floor(Math.random() * (600 - this.h)+ 1);
         } 
         while (randomNumber % 20 !== 0)
-            
+
         this.y = randomNumber
         this.x = randomNumber
         this.checkAppleRespawnPosition()
@@ -91,5 +99,21 @@ class Apple extends Obj{
 
     checkAppleRespawnPosition(){
         return true
+    }
+}
+
+class SocketUser{
+    constructor(x, y, w, h, color, id){
+        this.x = x
+        this.y = y
+        this.w = w
+        this.h = h
+        this.color = 'blue'
+        this.id = id
+    }
+
+    socketDrawSnake(){
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.x, this.y, this.w, this.h)
     }
 }
