@@ -4,6 +4,7 @@ const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const cors = require('cors')
+const { Obj, Snake, Apple, SocketUser } = require('./public/classes')
 
 app.use(express.static(path.join(__dirname + '/public')))
 app.use(cors())
@@ -14,31 +15,47 @@ app.get('/', (req, res) => {
 
 let socketConnectedUsers = []
 
+let apples = [
+    new Apple(200, 200, 20, 20, 'red'),
+    new Apple(100, 200, 20, 20, 'red'),
+    new Apple(400, 200, 20, 20, 'red')
+]
+
 io.on('connection', socket => {
     console.log(`\n Conexão recebida com o id: ${socket.id}`)
-    
-    // Envia a lista de usuários conectados para o novo usuário
-    socket.emit('connectedUsers', socketConnectedUsers)
-
     socket.broadcast.emit('userJoined', socket.id)
+    
+    socket.emit('connectedUsers', socketConnectedUsers)
+    socket.emit('socketUpdateApples', apples)
 
     socket.on('updatePlayer', (data) => {
-        // Atualiza ou adiciona o usuário na lista
-        const userIndex = socketConnectedUsers.findIndex(user => user.id === data.id)
-        if (userIndex !== -1) {
-            socketConnectedUsers[userIndex] = data
-        } else {
-            socketConnectedUsers.push(data)
-        }
+        const pesquisa = socketConnectedUsers.findIndex(element => element.id == data.id)
+            if(pesquisa !== -1){
+                socketConnectedUsers[pesquisa] = data
+            }else{
+                socketConnectedUsers.push(data)
+            }
+
+
         socket.broadcast.emit('socketUpdate', data)
+    })
+
+    socket.on('updateApples', () => {
+        socket.broadcast.emit('socketUpdateApples', apples)
     })
 
     socket.on('disconnect', () => {
         console.log(`\n Conexão finalizada: ${socket.id}`)
         
-        // Remove o usuário da lista quando ele se desconecta
-        socketConnectedUsers = socketConnectedUsers.filter(user => user.id !== socket.id)
+        const pesquisa = socketConnectedUsers.findIndex(element => element.id == socket.id)
+        if (pesquisa !== -1) {
+            socketConnectedUsers.splice(pesquisa, 1)
+        } else {
+            console.log('não achou')
+        }
+        socket.broadcast.emit('clientDisconnected', socket.id)
     })
+    
 })
 
 http.listen(3000, () => {

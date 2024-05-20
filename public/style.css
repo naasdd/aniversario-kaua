@@ -35,7 +35,7 @@ main{
 #ctx{
     border: solid 5px var(--azul);
     border-radius: 10px;
-    background-image: url('./img/bg-canvas.png');
+    background-image: url('./img/bg-canvas2.png');
     background-repeat: round;
     filter: brightness(.7);
 }
