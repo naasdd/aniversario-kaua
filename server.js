@@ -5,6 +5,7 @@ const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const cors = require('cors')
 const { Obj, Snake, Apple, SocketUser } = require('./public/classes')
+const { setInterval } = require('timers/promises')
 
 app.use(express.static(path.join(__dirname + '/public')))
 app.use(cors())
@@ -37,12 +38,21 @@ io.on('connection', socket => {
             }
 
 
-        socket.broadcast.emit('socketUpdate', data)
+        socket.broadcast.emit('socketUpdate', socketConnectedUsers)
     })
 
     socket.on('updateApples', () => {
         socket.broadcast.emit('socketUpdateApples', apples)
     })
+
+    socket.on('eatApple', (index) => {
+        apples[index].respawnApple()
+        socket.broadcast.emit('socketUpdateApples', apples)
+    })
+
+    setInterval(() => {
+        socket.broadcast.emit('socketUpdateApples', apples)
+    }, 200)
 
     socket.on('disconnect', () => {
         console.log(`\n Conexão finalizada: ${socket.id}`)
@@ -57,6 +67,7 @@ io.on('connection', socket => {
     })
     
 })
+
 
 http.listen(3000, () => {
     console.log(`\nServiço rodando na porta 3000\n\n`)

@@ -60,11 +60,11 @@ function draw() {
         snakeTail[i].drawSnake(ctx)
     }
 
-    connectedUsers.forEach(element => {
-        element.socketDrawSnake(ctx)
-        console.log(element)
-        console.log('cacete')
-    })
+    // for(i = connectedUsers.length -1; i >= 0; i--){
+    //     console.log(connectedUsers[i])
+    //     console.log('cacete')
+    //     connectedUsers[i].drawSnake()
+    // }
 }
 
 function att() {
@@ -74,7 +74,9 @@ function att() {
         if (user.checkCollision(apples[i])) {
             points++
             snakeTail.push(new Snake(120, 120, 20, 20, 'green'))
-            apples[i].respawnApple()
+            socket.emit('eatApple', i)
+            
+            // apples[i].respawnApple()
         }
     }
 }
@@ -85,7 +87,6 @@ function main() {
     att()
     draw()
 }
-
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~   PARTE SOCKET.IO   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,10 +105,21 @@ socket.on('userJoined', (socketUser) => {
 
 socket.on('socketUpdate', (data) => {
     for (let i = connectedUsers.length - 1; i >= 0; i--) {
-        if (connectedUsers[i].id == data.id) {
-            connectedUsers[i].x = data.x
-            connectedUsers[i].y = data.y
-        }
+        const localArray = connectedUsers[i]
+        for(i = data.length -1; i >= 0; i--){
+            const socketArray = data[i]
+            if(localArray.id != user.id){
+                localArray = socketArray
+                // localArray.drawSnake()
+                
+            }
+        };
+
+
+        // if (connectedUsers[i].id == data.id) {
+        //     connectedUsers[i].x = data.x
+        //     connectedUsers[i].y = data.y
+        // }
     }
 })
 
