@@ -22,9 +22,18 @@ let apples = [
     new Apple(400, 200, 20, 20, 'red')
 ]
 
+let imagens = [
+    './public/img/morte.png',
+    './public/img/maca2.png',
+    './public/img/morte.png',
+    './public/img/morte.png',
+]
+
 io.on('connection', socket => {
     console.log(`\n Conexão recebida com o id: ${socket.id}`)
-    socket.broadcast.emit('userJoined', socket.id)
+
+    socketConnectedUsers.push(new SocketUser(0, 0, 20, 20, 'blue', socket.id))
+    socket.broadcast.emit('userJoined', socketConnectedUsers)
     
     socket.emit('connectedUsers', socketConnectedUsers)
     socket.emit('socketUpdateApples', apples)
@@ -32,6 +41,7 @@ io.on('connection', socket => {
     socket.on('updatePlayer', (data) => {
         const pesquisa = socketConnectedUsers.findIndex(element => element.id == data.id)
             if(pesquisa !== -1){
+                data.color = 'gray'
                 socketConnectedUsers[pesquisa] = data
             }else{
                 socketConnectedUsers.push(data)
@@ -47,12 +57,17 @@ io.on('connection', socket => {
 
     socket.on('eatApple', (index) => {
         apples[index].respawnApple()
+        console.log('maça comida')
         socket.broadcast.emit('socketUpdateApples', apples)
     })
 
     setInterval(() => {
-        socket.broadcast.emit('socketUpdateApples', apples)
+        broadcast.emit('socketUpdateApples', apples)
     }, 200)
+
+
+    socket.on('assustar')
+
 
     socket.on('disconnect', () => {
         console.log(`\n Conexão finalizada: ${socket.id}`)
