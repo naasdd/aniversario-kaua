@@ -23,10 +23,13 @@ let apples = [
 ]
 
 let imagens = [
-    './public/img/morte.png',
-    './public/img/maca2.png',
-    './public/img/morte.png',
-    './public/img/morte.png',
+    './img/morte.png',
+    './img/maca2.png',
+    './img/bg-canvas2.png',
+    './img/regua.jpg',
+    './img/porra.HEIC',
+    './img/vini.HEIC',
+    './img/cachorro.jpg',
 ]
 
 io.on('connection', socket => {
@@ -66,7 +69,10 @@ io.on('connection', socket => {
     }, 200)
 
 
-    socket.on('assustar')
+    socket.on('assustar', () => {
+        let aleatorio = Math.floor(Math.random() * (imagens.length) + 1 )
+        socket.broadcast.emit('assustou', (imagens[aleatorio]))
+    })
 
 
     socket.on('disconnect', () => {

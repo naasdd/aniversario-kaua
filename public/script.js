@@ -1,6 +1,8 @@
 let ctx = document.getElementById('ctx').getContext('2d')
 
-var socket = io('http://192.168.0.181:3000') // Conectar com socket.io (multiplayer)
+let sts = document.getElementById('susto')
+
+var socket = io('/') // Conectar com socket.io (multiplayer)
 let user
 let connectedUsers = []
 
@@ -37,6 +39,9 @@ addEventListener('keydown', (event) => {
         case 'd':
             direction = 'right'
             break
+        case 'k':
+            assustar()
+            break
     }
 })
 
@@ -47,7 +52,6 @@ function draw() {
         if(connectedUsers[i].id != user.id){
 
             sktDrawSnake(connectedUsers[i])
-            console.log(`Entrou no for do draw de desenha os porra: ${i}`)
         }
     }
     
@@ -95,7 +99,6 @@ function main() {
 socket.on('connectedUsers', (users) => {
     console.log('Usuários conectados:', users)
     connectedUsers = users
-    console.log(`Agora connectedUsers é ${JSON.stringify({connectedUsers})}`)
 })
 
 socket.on('userJoined', (data) => {
@@ -104,10 +107,7 @@ socket.on('userJoined', (data) => {
 
 socket.on('socketUpdate', (data) => {
     for(i = data.length -1; i >= 0; i--){
-        console.log(`Atualmente data é ${data[i]}`)
-        
         connectedUsers = data
-        
     }
 })
 
@@ -117,7 +117,6 @@ socket.on('clientDisconnected', (data) => {
 
 socket.on('socketUpdateApples', (data) => {
     apples = data.map(apple => new Apple(apple.x, apple.y, apple.w, apple.h, apple.color))
-    // console.log(`data é ${data} \napples é ${apples}`)
 })
 
 
@@ -127,5 +126,13 @@ function sktDrawSnake(data){
 }
 
 function assustar(){
-    socket.emit('assutar')
+    socket.emit('assustar')
 }
+
+socket.on('assustou', info => {
+    sts.src = info
+    sts.style.display = 'block'
+    setTimeout(() => {
+        sts.style.display = 'none'
+    }, 2000);
+})

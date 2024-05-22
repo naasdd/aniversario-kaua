@@ -39,3 +39,12 @@ main{
     background-image: url('./img/bg-canvas.png');
     background-repeat: round;
 }
+
+#susto{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+}
