@@ -16,7 +16,7 @@ socket.on('connect', () => {
         ctx.clearRect(0, 0, 900, 600)
         main()
         socket.emit('updatePlayer', user)
-        socket.emit('updateApples')
+        socket.emit('updateApples', apples)
     }, 200)
 })
 

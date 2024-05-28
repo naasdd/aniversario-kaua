@@ -65,7 +65,7 @@ io.on('connection', socket => {
     })
 
     setInterval(() => {
-        broadcast.emit('socketUpdateApples', apples)
+        io.broadcast.emit('socketUpdateApples', apples)
     }, 200)
 
 
